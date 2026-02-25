@@ -15,10 +15,24 @@ Este projeto utiliza conceitos de Engenharia de Dados, Business Intelligence e A
 3. **Load/BI & Analytics:** Gera análises profundas sobre a saúde da carteira, indo muito além do saldo atual.
 
 ### 🌟 Funcionalidades Principais (Features)
+
 * **Smart Allocation (Rebalanceamento):** Calcula a distância exata de cada ativo em relação à meta de alocação da carteira, indicando matematicamente onde deve ser o aporte do mês para diluir riscos.
 * **DRE e Performance Global:** Acompanhamento do resultado não-realizado (lucro/prejuízo) de forma consolidada, permitindo a visão clara do retorno sobre o capital investido.
 * **Inteligência Preditiva (Viés de 30 Dias):** Modelagem que analisa a tendência de preço dos ativos para os próximos 30 dias, auxiliando no *timing* de compra (identificando possíveis correções ou altas).
 * **Agenda de Dividendos (Fluxo de Caixa):** Mapeamento e estimativa dos próximos proventos a serem recebidos, organizados em uma linha do tempo para facilitar a previsibilidade de renda passiva.
+
+## 📊 Visualização dos Dados (Dashboards)
+
+Abaixo estão alguns exemplos das análises geradas pelo projeto:
+
+**1. Performance Global e DRE da Carteira**
+![DRE Geral e Performance](img/Resultado%20analitrico1.png)
+
+**2. Composição do patrimônio e Lucro / Prejuizo por Empresa**
+![Viés Preditivo de 30 dias](img/Resultado%20analitrico2.png)
+
+**3. Estimativa de recebimentos e Viéz de Movimento**
+![Agenda de Dividendos](img/Resultado%20analitrico3.png)
 
 ## 🛠️ Tecnologias Utilizadas
 
