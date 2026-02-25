@@ -26,7 +26,7 @@ Este projeto utiliza conceitos de Engenharia de Dados, Business Intelligence e A
 * **Pandas:** Para manipulação de DataFrames, limpeza e cálculos de agregação financeira.
 * **YFinance:** Para extração de cotações, indicadores fundamentalistas (DY, P/VP) e histórico de preços em tempo real.
 * **Gspread / Google Auth:** Para integração segura e consumo de dados via API.
-* **Matplotlib / Seaborn / Plotly** *(ajuste conforme a biblioteca que usou nos gráficos)*: Para visualização de dados e plotagem da composição do patrimônio e tendências.
+* **Matplotlib / Seaborn / Plotly**: Para visualização de dados e plotagem da composição do patrimônio e tendências.
 
 ## 📂 Arquitetura do Projeto
 
