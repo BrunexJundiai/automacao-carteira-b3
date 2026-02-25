@@ -25,13 +25,17 @@ Este projeto utiliza conceitos de Engenharia de Dados, Business Intelligence e A
 
 Abaixo estão alguns exemplos das análises geradas pelo projeto:
 
-**1. Performance Global e DRE da Carteira**
+**1. Smart Allocation (Indicação de Aporte do Mês)**
+*Cálculo matemático que indica o ativo ideal para compra, visando manter o balanceamento e diluir o risco da carteira.*
+![Indicação de Aporte](img/ResultadoCotaçãoAtual.png)
+
+**2. Performance Global e DRE da Carteira**
 ![DRE Geral e Performance](img/Resultado%20analitrico1.png)
 
-**2. Composição do patrimônio e Lucro / Prejuizo por Empresa**
+**3. Composição do patrimônio e Lucro / Prejuizo por Empresa**
 ![Viés Preditivo de 30 dias](img/Resultado%20analitrico2.png)
 
-**3. Estimativa de recebimentos e Viéz de Movimento**
+**4. Estimativa de recebimentos e Viéz de Movimento**
 ![Agenda de Dividendos](img/Resultado%20analitrico3.png)
 
 ## 🛠️ Tecnologias Utilizadas
