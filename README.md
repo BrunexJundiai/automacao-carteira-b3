@@ -35,7 +35,7 @@ Abaixo estão alguns exemplos das análises geradas pelo projeto:
 **3. Composição do patrimônio e Lucro / Prejuizo por Empresa**
 ![Viés Preditivo de 30 dias](img/Resultado%20analitrico2.png)
 
-**4. Estimativa de recebimentos e Viéz de Movimento**
+**4. Estimativa de recebimentos e Viés de Movimento**
 ![Agenda de Dividendos](img/Resultado%20analitrico3.png)
 
 ## 🛠️ Tecnologias Utilizadas
