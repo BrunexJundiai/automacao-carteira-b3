@@ -1,39 +1,52 @@
-# Dicionário de Dados - Smart Portfolio Tracker
+# 📖 Dicionário de Dados e Regras de Negócio
 
-Este documento descreve a estrutura de colunas do painel de Business Intelligence e da tabela transacional.
+Este documento detalha a estrutura de dados e a inteligência aplicada nos três motores do ecossistema **Smart Portfolio Tracker**.
 
-| Coluna | Origem | Descrição |
+---
+
+## 1. Tabela Transacional (Google Sheets - Input)
+*A base de dados primária onde o usuário registra suas movimentações.*
+
+| Coluna | Descrição | Regra de Limpeza |
 | :--- | :--- | :--- |
-| **Data** | Manual | Data em que a operação (compra/venda) foi realizada. |
-| **Ativo** | Manual | Código da ação na B3 (Ticker). Ex: BBAS3. |
-| **Tipo** | Manual | Define se foi uma operação de "Compra" ou "Venda". |
-| **Qtd** | Manual | Quantidade de ações negociadas nesta operação. |
-| **Preco_Unitario**| Manual | Preço exato pago por cada ação. |
-| **Target_%** | Manual | Meta percentual de alocação deste ativo no patrimônio total. |
-| **Empresa** | Script (YFinance) | Razão Social ou nome oficial da companhia. |
-| **Ramo/Setor** | Script (YFinance) | Setor da economia em que a empresa atua. |
-| **Preço Atual** | Script (YFinance) | Cotação da ação em tempo real no mercado. |
-| **Seu PM** | Script (Pandas) | Preço Médio ponderado, calculado sobre o histórico de compras. |
-| **Rentab. (%)** | Script (Pandas) | Lucro/prejuízo não-realizado da posição. |
-| **DY (%)** | Script (YFinance) | *Dividend Yield*. Rendimento de dividendos dos últimos 12 meses. |
-| **P/VP** | Script (YFinance) | Preço/Valor Patrimonial. Indicador de desconto da ação. |
-| **Peso Atual (%)**| Script (Pandas) | Porcentagem real que esta empresa ocupa no patrimônio total hoje. |
-| **Distância Meta**| Script (Pandas) | Diferença entre o Peso Atual e o Target_%. Se negativo, indica defasagem. |
-| **Ação** | Script (Regra de Negócio)| Recomendação automática do algoritmo ("Forte Compra", "Aguardar"). |
+| **Data** | Data da operação. | Convertida para padrão ISO. |
+| **Ativo** | Ticker da ação (Ex: BBAS3). | Normalizado para uppercase e adicionado sufixo `.SA`. |
+| **Tipo** | Operação: COMPRA ou VENDA. | Convertida para uppercase para evitar erros de leitura. |
+| **Qtd** | Quantidade de cotas. | Cast para Float. |
+| **Preco_Unitario**| Preço pago por cota. | Remoção de 'R$' e tratamento de vírgula por ponto. |
+| **Target_%** | Meta de alocação desejada. | Usado no motor de Rebalanceamento. |
 
-## Dicionário de Dados - Módulo Preditivo e Analítico (`df_resultado`)
+---
 
-Esta tabela é gerada pelo script de Dashboard Avançado e foca em modelagem preditiva e DRE histórico.
+## 2. Motor de Rebalanceamento e Aportes (`df`)
+*Lógica aplicada para manter a estratégia de risco da carteira.*
 
-| Coluna | Origem | Descrição |
+| Coluna | Regra de Negócio | Objetivo |
 | :--- | :--- | :--- |
-| **Ativo** | Script | Código da ação na B3 (Ticker). |
-| **Total Investido (R$)** | Script (Pandas) | Soma de todo o capital já gasto em compras neste ativo (Preço Médio x Qtd). |
-| **Valor Atual (R$)** | Script (YFinance) | Valor de mercado da posição hoje (Cotação Atual x Qtd). |
-| **Lucro/Perda (R$)** | Script (Matemática) | Diferença absoluta entre o Valor Atual e o Total Investido (Ganho Não-Realizado). |
-| **Lucro (%)** | Script (Matemática) | Representação percentual do lucro ou prejuízo da posição. |
-| **Div. Últimos 12m/Ação (R$)**| Script (YFinance) | Soma de dividendos pagos por **uma única ação** desta empresa no último ano. |
-| **Estimativa Próx. Div. (R$)**| Script (Matemática) | Cálculo preditivo: (Média dos dividendos do último ano) x (Quantidade de ações que o usuário possui). |
-| **Previsão Mês Próx. Div.**| Script (Datetime) | Projeção da data do próximo pagamento, baseada na média de dias de intervalo dos últimos pagamentos. |
-| **Projeção 30d (R$)** | Script (NumPy) | Preço alvo da ação para daqui 30 dias, utilizando modelo de Machine Learning (Regressão Linear / `polyfit`) sobre o histórico de 6 meses. |
-| **Viés Tendência** | Regra de Negócio | Classificação visual ("Alta 🟢" ou "Baixa 🔴") comparando o Preço Atual com a Projeção de 30 dias. |
+| **Seu PM** | `Soma(Qtd * Preco) / Soma(Qtd Total)` | Cálculo de Preço Médio Ponderado Dinâmico. |
+| **Peso Atual (%)**| `(Valor Ativo / Patrimônio Total) * 100` | Exposição real do ativo no momento. |
+| **Distância Meta**| `Peso Atual (%) - Target_%` | Identificar desvios na estratégia de alocação. |
+| **Ação** | **Regra:** Distância < -2% = **Forte Compra**; < 0 = **Marginal**; > 0 = **Aguardar**. | Automatizar a decisão de aporte mensal. |
+
+---
+
+## 3. Módulo Analítico e Preditivo (`df_resultado`)
+*Inteligência de mercado e projeções de fluxo de caixa.*
+
+| Coluna | Lógica de Cálculo / Modelo | Descrição |
+| :--- | :--- | :--- |
+| **Lucro/Perda** | `(Preço Atual - PM) * Qtd` | Resultado nominal (DRE) não-realizado. |
+| **Estimativa Div.**| `Média(Div_12m) * Qtd Atual` | Projeção de renda baseada no histórico de 1 ano. |
+| **Projeção 30d** | `Regressão Linear (Numpy polyfit)` | Tendência de preço baseada nos últimos 6 meses de histórico. |
+| **Viés Tendência**| `IF(Projeção > Preço Atual, 🟢, 🔴)` | Indicador visual de momento de mercado. |
+
+---
+
+## 4. Radar de Oportunidades (Alertas Telegram)
+*Análise técnica tática para otimização de entradas e saídas.*
+
+| Indicador | Parâmetro de Regra | Ação Resultante |
+| :--- | :--- | :--- |
+| **RSI (IFR)** | Período de 14 dias. | Mede a força do movimento de preço. |
+| **Sinal COMPRA** | `Preço < PM` **E** `RSI <= 35` | Alerta de ativo subvalorizado (Oportunidade de baixar PM). |
+| **Sinal VENDA** | `Preço > (PM * 1.10)` **E** `RSI >= 70` | Alerta de ativo sobrecomprado (Oportunidade de lucro). |
