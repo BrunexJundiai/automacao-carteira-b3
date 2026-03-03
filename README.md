@@ -17,6 +17,7 @@ Este projeto utiliza conceitos de Engenharia de Dados, Business Intelligence e A
 ### 🌟 Funcionalidades Principais (Features)
 
 * **Smart Allocation (Rebalanceamento):** Calcula a distância exata de cada ativo em relação à meta de alocação da carteira, indicando matematicamente onde deve ser o aporte do mês para diluir riscos.
+* **Alertas Ativos via Telegram (Radar B3):** Motor de regras autônomo (*Screener*) que avalia o Preço Médio e o indicador de Força Relativa (RSI), identificando matematicamente ativos sobrevendidos (desconto tático) ou sobrecomprados (lucro) e disparando alertas diretos no celular.
 * **DRE e Performance Global:** Acompanhamento do resultado não-realizado (lucro/prejuízo) de forma consolidada, permitindo a visão clara do retorno sobre o capital investido.
 * **Inteligência Preditiva (Viés de 30 Dias):** Modelagem que analisa a tendência de preço dos ativos para os próximos 30 dias, auxiliando no *timing* de compra (identificando possíveis correções ou altas).
 * **Agenda de Dividendos (Fluxo de Caixa):** Mapeamento e estimativa dos próximos proventos a serem recebidos, organizados em uma linha do tempo para facilitar a previsibilidade de renda passiva.
@@ -44,14 +45,15 @@ Abaixo estão alguns exemplos das análises geradas pelo projeto:
 * **Pandas:** Para manipulação de DataFrames, limpeza e cálculos de agregação financeira.
 * **YFinance:** Para extração de cotações, indicadores fundamentalistas (DY, P/VP) e histórico de preços em tempo real.
 * **Gspread / Google Auth:** Para integração segura e consumo de dados via API.
+* **Requests:** Para integração via API com o bot do Telegram.
 * **Matplotlib / Seaborn / Plotly**: Para visualização de dados e plotagem da composição do patrimônio e tendências.
 
 ## 📂 Arquitetura do Projeto
 
-* `/src`: Scripts Python contendo o motor de análise, ETL e as predições.
+* `/src`: Scripts Python e Notebooks (`.ipynb`) contendo o motor de análise, ETL, predições e o Radar do Telegram.
 * `/docs`: Documentação do projeto, incluindo o Dicionário de Dados da modelagem.
 * `README.md`: Apresentação e documentação principal.
 
 ## 🚀 Como utilizar
 
-Os scripts na pasta `src` servem como base. Para uso pessoal, recomenda-se a execução do motor analítico em um ambiente como o Google Colab ou Jupyter Notebook, inserindo as credenciais de autenticação próprias para leitura do banco de dados transacional.
+Os scripts na pasta `src` servem como base. Para uso pessoal, recomenda-se a execução do motor analítico em um ambiente como o Google Colab ou Jupyter Notebook, inserindo as credenciais de autenticação próprias para leitura do banco de dados transacional e os tokens pessoais para o Telegram.
