@@ -30,7 +30,7 @@ Abaixo estão os resultados das análises e as notificações ativas geradas pel
 
 **1. Radar de Oportunidades - Notificação via Telegram**
 *O sistema monitora o mercado e envia alertas táticos baseados em RSI e Preço Médio diretamente para o celular.*
-![Alerta Telegram](img/telegram_alerta.png)
+![Alerta Telegram](img/telegram.png)
 
 
 
