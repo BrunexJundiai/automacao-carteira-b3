@@ -1,9 +1,9 @@
 # 📈 Sniper B3: Automação, BI e Inteligência Preditiva (V2.0)
 
-Um ecossistema completo de **Engenharia de Dados** e **Business Intelligence** construído em Python para automatizar o acompanhamento, o rebalanceamento estratégico e a análise de tendência de uma carteira de investimentos na B3.
+Um ecossistema avançado de **Engenharia de Dados** e **Decisão Estratégica** construído em Python. O projeto automatiza o monitoramento tático de ativos, o rebalanceamento de carteira e utiliza modelos de **Regressão Linear** para projetar tendências de curto prazo na B3.
 
 ## 🎯 O Problema
-Investidores frequentemente perdem tempo com cálculos manuais de Preço Médio, falham em identificar o momento técnico ideal de compra (RSI) ou deixam o emocional ditar a alocação de capital, distanciando-se do perfil de risco desejado.
+Investidores enfrentam dificuldades em manter a disciplina emocional em mercados voláteis, muitas vezes falhando em identificar o *timing* técnico ideal para aportes ou saídas estratégicas. Este projeto resolve essa dor através de algoritmos frios e precisos.
 
 ## 💡 A Solução
 Este projeto utiliza conceitos de **ETL (Extract, Transform, Load)** e **Análise Preditiva** para criar uma arquitetura de suporte à decisão:
@@ -12,12 +12,16 @@ Este projeto utiliza conceitos de **ETL (Extract, Transform, Load)** e **Anális
 2. **Transform:** Processamento matemático de Preço Médio ponderado, cálculo de rentabilidade real e modelagem de tendência.
 3. **Load/Analytics:** Geração de dashboards executivos em PDF e alertas táticos automatizados via Telegram.
 
+A. **Camada Estratégica (BI Mensal):** Relatórios executivos em PDF que cruzam a necessidade de rebalanceamento com o potencial de valorização futura.
+B. **Camada Tática (Radar Sniper):** Um robô de alta frequência que monitora RSI, preço médio e viés preditivo para disparar alertas de execução via Telegram.
+
 ---
 
-## 📊 Visualização dos Dados e Resultados
+## 📊 Visualização dos Dados e Resultados (Sniper V2)
 
 ### 1. Radar Sniper V2 (Operacional via Telegram)
-O motor avalia o mercado em intervalos de 60 minutos em busca de exaustão de preço e tendências.
+O motor avalia o mercado em intervalos de 60 minutos em busca de exaustão de preço e tendências. O sistema opera em tempo real com envio de "Sinal de Vida" em zonas neutras e alertas táticos em oportunidades reais.
+
 | Compra Sniper | Zona Neutra | Venda (Lucro) |
 | :---: | :---: | :---: |
 | ![Compra](img/alerta_compra.png) | ![Neutro](img/alerta_neutro.png) | ![Venda](img/alerta_venda.png) |
