@@ -2,9 +2,13 @@
 # ECOSSISTEMA SNIPER B3 - SHOWCASE VERSION (PUBLIC REPOSITORY)      #
 # ================================================================= #
 # Autor: Bruno Felipe (BrunexJundiai)
-# Descrição: Versão simplificada do Ecossistema Master Quantitativo.
-# As credenciais e blocos de geração de PDF foram abstraídos por 
-# segurança e proteção de propriedade intelectual (Portfólio).
+# Descrição: Versão simplificada do Ecossistema Master Quantitativo (V3.0).
+# Demonstração da arquitetura Core-Satellite (Ações + Cripto), 
+# Cotação Sintética (Cross-currency) e Regressão Linear.
+# 
+# NOTA: Credenciais, envio de webhooks via Telegram e a renderização 
+# avançada de Lâminas Multi-page em PDF foram abstraídos por segurança 
+# e proteção de propriedade intelectual.
 # ================================================================= #
 
 import os
@@ -12,18 +16,15 @@ import gspread
 import pandas as pd
 import numpy as np
 import yfinance as yf
-import matplotlib.pyplot as plt
-import seaborn as sns
 import requests
 import warnings
-from datetime import datetime, timedelta
+from datetime import datetime
 
 warnings.filterwarnings('ignore')
 
 # ==========================================
 # 1. CONFIGURAÇÕES E CREDENCIAIS (MASCARADAS)
 # ==========================================
-# TODO: Insira suas credenciais locais e IDs para rodar o projeto
 CAMINHO_JSON = os.getenv("GOOGLE_SHEETS_CREDENTIALS", "caminho/para/sua/credencial.json")
 ID_PLANILHA = os.getenv("SPREADSHEET_ID", "SEU_ID_DE_PLANILHA_AQUI")
 BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN", "SEU_TOKEN_AQUI")
@@ -35,13 +36,8 @@ def autenticar_google():
     raise FileNotFoundError("JSON de credenciais não configurado.")
 
 def enviar_telegram(mensagem, caminho_arquivo=None, modo_texto="HTML"):
-    url_text = f"https://api.telegram.org/bot{BOT_TOKEN}/sendMessage"
-    url_doc = f"https://api.telegram.org/bot{BOT_TOKEN}/sendDocument"
-    try:
-        requests.post(url_text, json={"chat_id": CHAT_ID, "text": mensagem, "parse_mode": modo_texto})
-        # Lógica de envio de documento abstraída
-    except Exception as e:
-        pass
+    # Lógica de requests e envio de documentos abstraída para o repositório público
+    pass
 
 # ==========================================
 # 2. FUNÇÕES MATEMÁTICAS CORE (QUANTITATIVO)
@@ -76,44 +72,61 @@ def rodar_ecossistema():
     # --- EXTRAÇÃO ÚNICA (ETL) ---
     gc = autenticar_google()
     aba = gc.open_by_key(ID_PLANILHA).sheet1
-    df_raw = pd.DataFrame(aba.get_all_records())
     
-    # [BLOCO DE CÓDIGO RESUMIDO] Tratamento numérico e padronização
+    # TRUQUE DE ENGENHARIA: UNFORMATTED_VALUE evita bugs de leitura de moedas e milhares do GSheets
+    df_raw = pd.DataFrame(aba.get_all_records(value_render_option='UNFORMATTED_VALUE'))
+    
+    # [BLOCO DE CÓDIGO RESUMIDO] Tratamento numérico
     df_raw['Qtd_Ajustada'] = df_raw.apply(lambda x: -x['Qtd'] if str(x['Tipo']).upper() == 'VENDA' else x['Qtd'], axis=1)
-    df_raw['Vol_Ajustado'] = df_raw.apply(lambda x: -x['Qtd']*x['Preco_Unitario'] if str(x['Tipo']).upper() == 'VENDA' else x['Qtd']*x['Preco_Unitario'], axis=1)
+    
+    # Tratamento de Tickers (B3 recebe .SA, Cripto com hífen é mantido intacto)
+    if 'Ativo' in df_raw.columns:
+        df_raw['Ativo'] = df_raw['Ativo'].str.strip().str.upper().apply(lambda x: x if x.endswith('.SA') or '-' in x else f"{x}.SA")
 
     carteira_mestre = df_raw.groupby('Ativo').agg(
-        Qtd_Total=('Qtd_Ajustada', 'sum'),
-        Investido_Liquido=('Vol_Ajustado', 'sum')
+        Qtd_Total=('Qtd_Ajustada', 'sum')
     ).reset_index()
 
-    # Preço Médio e DOWNLOAD YAHOO FINANCE
+    # --- DOWNLOAD YAHOO FINANCE & COTAÇÃO SINTÉTICA CRIPTO ---
     tickers = carteira_mestre['Ativo'].tolist()
+    
+    # Lógica Sintética: Contorna o delisting de pares BRL gerando cotação em tempo real via Dólar
+    tem_btc_brl = False
+    if 'BTC-BRL' in tickers:
+        tickers.remove('BTC-BRL')
+        tickers.extend(['BTC-USD', 'USDBRL=X'])
+        tem_btc_brl = True
+
     dados_mercado = yf.download(tickers, period="180d", progress=False)['Close']
+    
+    if tem_btc_brl:
+        dados_mercado['USDBRL=X'] = dados_mercado['USDBRL=X'].ffill() # Preenche FDS do câmbio
+        dados_mercado['BTC-BRL'] = dados_mercado['BTC-USD'] * dados_mercado['USDBRL=X']
+        tickers = carteira_mestre['Ativo'].tolist() # Restaura a lista original
 
     # ==========================================
     # MÓDULO 1: RADAR SNIPER (TÁTICO)
     # ==========================================
     alertas_radar = []
-    for _, row in carteira_mestre.iterrows():
-        t = row['Ativo']
+    for t in tickers:
         try:
             precos = dados_mercado[t].dropna() if len(tickers) > 1 else dados_mercado.dropna()
-            p_atual = float(precos.iloc[-1])
             rsi = float(calcular_rsi(precos).iloc[-1])
             upside = calcular_vies_preditivo(precos)
             
-            # Lógica Pública Demonstrativa: Compra Extrema
-            if rsi <= 25:
+            # Lógica Demonstrativa: Compra Extrema (Ignora cripto nos alertas diários para não gerar ruído no FDS)
+            if rsi <= 25 and '-' not in t:
                 alertas_radar.append(f"ALERTA TÁTICO: {t} | RSI {rsi:.1f} | Viés 30d: {upside:.1f}%")
         except: continue
 
     # ==========================================
     # MÓDULO 2 e 3: DASHBOARD E APORTES (ESTRATÉGICO)
     # ==========================================
+    # O processamento aplica o filtro anti "faca caindo", separando 
+    # visualmente a alocação da B3 (Core) do acompanhamento Cripto (Satélite).
+    
     analise_ap = []
-    for _, row in carteira_mestre.iterrows():
-        t = row['Ativo']
+    for t in tickers:
         try:
             precos = dados_mercado[t].dropna() if len(tickers) > 1 else dados_mercado.dropna()
             vies = calcular_vies_preditivo(precos)
@@ -131,13 +144,12 @@ def rodar_ecossistema():
         df_ap['Ação'] = df_ap.apply(definir_acao_quantitativa, axis=1)
         
     # ==========================================
-    # GERAÇÃO DE RELATÓRIOS E PDFS
+    # GERAÇÃO DE RELATÓRIOS E PDFS (ABSTRAÍDO)
     # ==========================================
-    # Nota de Segurança/Portfólio:
-    # A lógica complexa de renderização visual (Matplotlib/Seaborn)
-    # e a estrutura detalhada das mensagens de Telegram foram abstraídas
-    # nesta versão pública para proteger a propriedade intelectual.
-    print("Módulos processados com sucesso. Preparando envio de webhooks...")
+    # Em produção, este script utiliza Matplotlib e PdfPages para gerar 
+    # relatórios de múltiplas lâminas (Trend Following Cripto e DRE B3) 
+    # e aciona os webhooks do Telegram Bot API.
+    print("Processamento Quantitativo concluído. Preparando envio de relatórios...")
 
 if __name__ == "__main__":
     rodar_ecossistema()
