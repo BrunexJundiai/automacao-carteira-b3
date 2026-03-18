@@ -52,6 +52,7 @@ Cálculo mensal para direcionamento inteligente de fluxo de caixa da carteira "C
 * **🎯 FORTE COMPRA:** Se `Vies_Preditivo > 0` E `Distancia < -2.0%`. (Tendência de alta aliada a déficit de alocação).
 * **🟢 COMPRA:** Se `Vies_Preditivo > 0` E `Distancia < 0%`.
 * **⏳ AGUARDAR:** Ativos que bateram a meta, criptoativos (Target 0) ou sem margem de segurança.
+* **🔥 Caçador de Assimetrias (Desempate):** Em caso de múltiplos ativos com selo de compra, o algoritmo prioriza matematicamente o ativo com o **Maior Viés Preditivo (Upside projetado)**, focando no *Momentum* e no tamanho da oportunidade de curto prazo em vez de focar apenas no rebalanceamento percentual cego da carteira.
 
 ### D. Módulo de Ativos Alternativos (Estratégia Cripto)
 Gerenciamento apartado (Carteira Satélite) para absorção de altíssima volatilidade.
