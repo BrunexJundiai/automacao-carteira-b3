@@ -27,9 +27,10 @@ Visão consolidada da saúde do patrimônio separada em Lâminas.
 * **Página 2 (Satélite Cripto):** Focada em *Trend Following*. Isola os ativos alternativos, cruzando o preço de fechamento com uma Média Móvel Simples (SMA) de 30 dias para identificar visualmente tendências de alta ou correções severas, além de uma tabela de KPIs exclusiva.
 
 ### 3. Gestão de Fluxo de Caixa (Aportes Mensais)
-Inteligência de rebalanceamento cruzada com tendência.
+Inteligência de rebalanceamento cruzada com tendência e *Momentum*.
 * **Filtro Mestre (A Trava da Faca Caindo):** Bloqueia sumariamente qualquer compra de ativo com **Viés Preditivo Negativo**, independentemente de quão descontada a ação pareça estar.
 * **Isolamento de Alocação:** Criptomoedas são configuradas com Target 0% e blindadas pelo algoritmo para não sugarem o fluxo de caixa mensal destinado à construção de renda passiva (B3).
+* **🔥 Caçador de Assimetrias:** Em caso de múltiplos ativos com sinal de compra, o algoritmo atua como um *Momentum Trader*, priorizando matematicamente o ativo com o **Maior Viés Preditivo (Upside)** em vez de apenas preencher lacunas percentuais na carteira.
 
 ---
 
@@ -42,6 +43,7 @@ Inteligência de rebalanceamento cruzada com tendência.
 | **Compra Sniper** | `Preço < (PM * 0.85)` & `RSI <= 25` | Capturar pânico irracional do mercado com margem de segurança de 15%. |
 | **Venda Tática** | `RSI >= 75` ou (`Lucro > 5%` & `Viés < -10%`) | Realizar lucro na euforia ou proteger capital em caso de inversão estrutural de tendência. |
 | **Aporte Seguro** | `Viés > 0` & `Distância Meta < -2.0%` | Garantir que o capital novo só compre ativos descontados em tendência de alta comprovada. |
+| **Desempate de Aporte** | `Maior Viés Preditivo (%)` | Caçar assimetrias e focar no *Momentum* de curto prazo, maximizando o potencial de alta. |
 | **Trend Following (Cripto)**| `Fechamento vs SMA(30)` | Evidenciar graficamente se o ativo está trabalhando acima ou abaixo da sua média mensal. |
 
 ---
@@ -76,7 +78,7 @@ Cruzamento da distância da meta de alocação com o viés preditivo de tendênc
 | | ![Distância da Meta](img/distancia_meta_aporte.png) |
 | | ![DRE Analítico](img/DRE_analitico.png) |
 
-> 💡 **Insight:** A nova arquitetura garante que a meta engessada de portfólio seja apenas um critério de desempate. O modelo quantitativo, focado em dados de tendência (Regressão Linear), é sempre soberano para decidir o destino do capital.
+> 💡 **Insight:** A nova arquitetura garante que a meta engessada de portfólio seja apenas um filtro secundário. O modelo quantitativo age como um *Caçador de Assimetrias*, focando soberanamente na Regressão Linear para direcionar o capital ao ativo com maior projeção de alta no momento.
 
 ---
 
@@ -87,7 +89,7 @@ Cruzamento da distância da meta de alocação com o viés preditivo de tendênc
 * **Matplotlib / Seaborn / PdfPages:** Geração e formatação visual avançada dos dashboards *multi-page* em PDF.
 * **Gspread:** Integração com banco de dados em nuvem via Google Cloud API.
 * **Telegram Bot API:** Interface de mensageria para entrega de relatórios e sinais *intraday*.
-* **PyInstaller & Windows Task Scheduler:** Compilação do ecossistema em executável único para orquestração autônoma (a cada meia Hora).
+* **PyInstaller & Windows Task Scheduler:** Compilação do ecossistema em executável único para orquestração autônoma (a cada meia hora).
 
 ---
 
