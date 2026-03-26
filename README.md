@@ -6,7 +6,7 @@ Um ecossistema avançado de **Engenharia de Dados**, **Decisão Estratégica** e
 Investidores enfrentam dificuldades em manter a disciplina emocional em mercados voláteis, muitas vezes falhando em identificar o *timing* técnico ideal para aportes, tentando "pegar facas caindo" ou mantendo em carteira ativos que perderam seus fundamentos de tendência. Além disso, gerenciar planilhas de diferentes classes de ativos (Ações vs. Cripto) gera ruído e distorce o fluxo de caixa. Este projeto resolve essa dor através de algoritmos frios, matemáticos e precisos.
 
 ## 💡 A Solução (Arquitetura Master)
-Na versão 3.0, o sistema evoluiu para um **Ecossistema Master Unificado** com estratégia **Core-Satellite** (Ações como núcleo estrutural e Criptomoedas como satélite de assimetria). Utilizando conceitos sólidos de **ETL (Extract, Transform, Load)**, a arquitetura opera com *Single Source of Truth* (Fonte Única da Verdade):
+Na versão 3.0, o sistema evoluiu para um **Ecossistema Master Unificado** com estratégia **Core-Satellite** (Ações como núcleo estrutural e Criptomoedas como satélite de assimetria). Utilizando conceitos sólidos de **ETL (Extract, Transform, Load)** e **Containerização**, a arquitetura opera com *Single Source of Truth* (Fonte Única da Verdade):
 
 1. **Extract (Extração Blindada):** Consumo centralizado via API do Google Sheets utilizando `UNFORMATTED_VALUE` (para ignorar formatações visuais de moeda/milhares que causam bugs) e YFinance (histórico de 6 meses). Executado apenas uma vez por ciclo para evitar bloqueios de API.
 2. **Transform (Cotação Sintética e Matemática):** Processamento de Saldo Ajustado, cálculo de Preço Médio inteligente e modelagem estatística. Para contornar remoções abruptas de pares de moedas BRL na API, o sistema cria uma **Cotação Sintética** matemática para o Bitcoin (`BTC-USD * USDBRL=X`).
@@ -84,21 +84,28 @@ Cruzamento da distância da meta de alocação com o viés preditivo de tendênc
 
 ## 🛠 Tecnologias Utilizadas
 
+![Python](https://img.shields.io/badge/python-3670A0?style=for-the-badge&logo=python&logoColor=ffdd54)
+![Pandas](https://img.shields.io/badge/pandas-%23150458.svg?style=for-the-badge&logo=pandas&logoColor=white)
+![NumPy](https://img.shields.io/badge/numpy-%23013243.svg?style=for-the-badge&logo=numpy&logoColor=white)
+![Docker](https://img.shields.io/badge/docker-%230db7ed.svg?style=for-the-badge&logo=docker&logoColor=white)
+![Google Cloud](https://img.shields.io/badge/GoogleCloud-%234285F4.svg?style=for-the-badge&logo=google-cloud&logoColor=white)
+![Telegram](https://img.shields.io/badge/Telegram-2CA5E0?style=for-the-badge&logo=telegram&logoColor=white)
+
 * **Python / Pandas / Numpy:** Motor central para limpeza de dados (ETL), junções sintéticas e cálculos preditivos de *Machine Learning Light*.
 * **YFinance:** Consumo de histórico de preços, *cross-currency* e indicadores de dividendos.
 * **Matplotlib / Seaborn / PdfPages:** Geração e formatação visual avançada dos dashboards *multi-page* em PDF.
 * **Gspread:** Integração com banco de dados em nuvem via Google Cloud API.
 * **Telegram Bot API:** Interface de mensageria para entrega de relatórios e sinais *intraday*.
-* **PyInstaller & Windows Task Scheduler:** Compilação do ecossistema em executável único para orquestração autônoma (a cada meia hora).
+* **Docker:** Containerização completa da aplicação, garantindo execução autônoma, resiliente e contínua em ambiente isolado, substituindo orquestradores locais sujeitos a falhas.
 
 ---
 
 ## 🚀 Como Utilizar
 
 1. Clone o repositório.
-2. Configure as **Variáveis de Ambiente / Credenciais** no seu sistema (Caminho do JSON do Google Cloud, `ID_PLANILHA`, `BOT_TOKEN` e `CHAT_ID`).
+2. Configure as **Variáveis de Ambiente / Credenciais** no seu sistema (salvando o arquivo JSON de credenciais do Google Cloud na raiz do projeto e configurando `ID_PLANILHA`, `BOT_TOKEN` e `CHAT_ID` no código principal).
 3. Mantenha os seus ativos de B3 e Criptomoedas (usando o sufixo padrão de mercado, ex: `BTC-BRL`) em uma planilha única do Google Sheets.
-4. Para automação *hands-off*, compile o script mestre em um `.exe` e aponte o Agendador de Tarefas do Windows para rodá-lo ininterruptamente durante o pregão.
-
----
-*Projeto desenvolvido por Bruno Felipe de Almeida (BrunexJundiai) - 2026*
+4. Para automação *hands-off*, construa a imagem e inicie o container via **Docker**:
+   ```bash
+   docker build -t sniper-bot .
+   docker run -d --name meu-sniper-bot --restart unless-stopped sniper-bot
