@@ -1,122 +1,104 @@
-# 📈 Sniper B3: Ecossistema Master Quantitativo & IA (V4.0)
+# 📈 Sniper B3: Ecossistema Master Quantitativo & IA (V5.0 - POO)
 
-Um ecossistema avançado de **Engenharia de Dados**, **Inteligência Artificial (Multi-Agent)** e **Automação Quantitativa** construído em Python. O projeto funciona como um motor de *Hedge Fund* particular: automatiza a extração de dados (ETL), o monitoramento tático de ativos (B3 e Criptomoedas) e utiliza modelos preditivos, indicadores técnicos (MACD, Bollinger) e um pipeline RAG com LLMs para embasar o rebalanceamento de carteira e proteger o capital.
+Um ecossistema avançado de **Engenharia de Dados**, **Inteligência Artificial (Multi-Agent)** e **Automação Quantitativa** construído em Python. O projeto funciona como um motor de *Hedge Fund* particular: automatiza a extração de dados (ETL), o monitoramento tático de ativos da B3 e utiliza modelos preditivos, indicadores técnicos (MACD, Bollinger) e um pipeline de Agentes LLM para embasar o rebalanceamento de carteira e proteger o capital.
 
-## 🎯 O Problema
-Investidores enfrentam dificuldades em manter a disciplina emocional em mercados voláteis, muitas vezes falhando em identificar o *timing* técnico ideal para aportes, tentando "pegar facas caindo" ou ignorando o contexto macroeconômico. Além disso, gerenciar planilhas de diferentes classes de ativos gera ruído. Este projeto resolve essa dor unindo **algoritmos matemáticos frios** com o **contexto fundamentalista de Agentes de IA**.
+Na versão 5.0, o sistema foi integralmente refatorado para o padrão **POO (Programação Orientada a Objetos)** e conteinerizado via **Docker**, garantindo modularidade, blindagem de memória e execução autônoma local durante o horário do pregão.
 
-## 💡 A Solução (Arquitetura Master AI)
-Na versão 4.0, o sistema evoluiu para um **Ecossistema Master Unificado** com estratégia **Core-Satellite** e tomada de decisão impulsionada por IA. Utilizando conceitos sólidos de **ETL**, **Containerização** e **Grafos de IA**, a arquitetura opera com *Single Source of Truth* (Fonte Única da Verdade):
+## 🛠️ Stack Tecnológica
 
-1. **Extract (Extração Blindada e Sequencial):** Consumo centralizado via API do Google Sheets (`UNFORMATTED_VALUE`) e *YFinance* (histórico de 180 dias). O pipeline possui travas anti-concorrência (`threads=False`) no cache do SQLite e bloqueio de execução fora do horário comercial da B3, otimizando o consumo de APIs.
-2. **Transform (Cálculos e Cotação Sintética):** Processamento de Saldo Ajustado, cálculo de Preço Médio inteligente e modelagem estatística. O sistema cria uma **Cotação Sintética** para o Bitcoin (`BTC-USD * USDBRL=X`) como *failover* para quedas de pareamento BRL nas APIs.
-3. **AI Pipeline (RAG & Agentes):** Integração com LangGraph e Groq (Llama 3). O sistema coleta notícias em tempo real e as cruza com os dados quantitativos para gerar um *Dossiê de Value Investing*.
-4. **Load/Analytics (A Tríade Sniper):** O pipeline alimenta três módulos de decisão simultâneos e envia dashboards executivos *multi-page* em PDF e alertas táticos via Telegram.
+| Categoria | Tecnologias e Frameworks |
+| :--- | :--- |
+| **Linguagem & Infra** | ![Python](https://img.shields.io/badge/python-3670A0?style=for-the-badge&logo=python&logoColor=ffdd54) ![Docker](https://img.shields.io/badge/docker-%230db7ed.svg?style=for-the-badge&logo=docker&logoColor=white) |
+| **Inteligência Artificial** | ![LangChain](https://img.shields.io/badge/LangGraph-1C3C3C?style=for-the-badge&logo=langchain&logoColor=white) ![Groq](https://img.shields.io/badge/Groq-f55036?style=for-the-badge&logo=groq&logoColor=white) ![RAG](https://img.shields.io/badge/RAG-Context_Aware-blue?style=for-the-badge) |
+| **Mercado & Dados** | ![Yahoo Finance](https://img.shields.io/badge/Yahoo%20Finance-430297?style=for-the-badge&logo=yahoo&logoColor=white) ![Google Sheets](https://img.shields.io/badge/Google_Sheets-34A853?style=for-the-badge&logo=google-sheets&logoColor=white) |
+| **Interface & DataViz** | ![Telegram](https://img.shields.io/badge/Telegram-2CA5E0?style=for-the-badge&logo=telegram&logoColor=white) ![Pandas](https://img.shields.io/badge/Pandas-150458?style=for-the-badge&logo=pandas&logoColor=white) ![Matplotlib](https://img.shields.io/badge/Matplotlib-%23ffffff.svg?style=for-the-badge&logo=Matplotlib&logoColor=black) |
+
+## 📐 Arquitetura Modular (Fonte Única de Verdade)
+A arquitetura do sistema foi isolada em micro-módulos para garantir escalabilidade e resiliência contra falhas de API:
+1. **`dados_mercado.py` (ETL):** Consumo centralizado via API do Google Sheets (`UNFORMATTED_VALUE`) e *YFinance*. Cálculo de Saldo Ajustado e Preço Médio inteligente.
+2. **`indicadores.py` (Quantitativo):** Fábrica de cálculos matemáticos vetoriais (RSI, MACD, Bollinger e Regressão Linear).
+3. **`agentes_ia.py` (Cérebro & RAG):** - Orquestração via **LangGraph** utilizando um Grafo de Estado para decisões não-lineares.
+   - **Mecanismo RAG:** O sistema realiza o *scraping* de notícias em tempo real via `yfinance.news`. Esses dados são injetados no contexto do LLM (**Llama 3.3**), permitindo que a IA interprete se uma queda no preço é uma oportunidade técnica ou um risco fundamentalista (ex: divulgação de balanços ou fatos relevantes).
+4. **`agentes_ia.py` (LangGraph):** Motor de IA com LangGraph e Groq (Llama 3.3). Cruza indicadores técnicos com o contexto fundamentalista de notícias recentes.
+5. **`relatorios_pdf.py` (DataViz):** Geração headless de relatórios em PDF com gráficos individuais e formatação condicional.
+6. **`orquestrador.py` (Motor Async):** Loop assíncrono blindado contra concorrência (Race Conditions), responsável por gerenciar a comunicação com o Telegram e o disparo de relatórios.
 
 ---
 
 ## ⚙️ A Tríade de Decisão (Módulos do Sistema)
 
 ### 1. Radar Sniper (Operacional e Tático)
-Um robô que avalia o mercado em busca de exaustão de preço.
+Um robô que avalia o mercado a cada 10 minutos em busca de exaustão de preço.
 * **Memória de PM Histórico:** Se um ativo for totalmente vendido com lucro, o sistema guarda seu PM. Se a ação despencar irracionalmente no futuro, ele emite um alerta de **🔥 RECOMPRA SNIPER**.
-* **Trava de Segurança (Cripto):** O ecossistema silencia o Bitcoin fora do horário comercial, deixando a alta volatilidade a cargo da corretora, focando puramente na visão analítica diária.
+* **Trava de Segurança:** O ecossistema repousa automaticamente fora do horário comercial (10h às 18h), otimizando o consumo de APIs e hardware.
 
-### 2. Dashboard Estratégico (Visão Executiva)
-Visão consolidada da saúde do patrimônio separada em Lâminas visuais complexas.
-* **Página 1 (Mapa Global & B3):** Exibe o *Treemap* (Mapa de Alocação de Capital), Cronograma de Dividendos futuros projetados pela média dos últimos 12 meses e Viés Preditivo de curto prazo.
-* **Página 2 (Satélite Cripto):** Focada em *Trend Following*. Isola ativos alternativos, cruzando o preço de fechamento com uma Média Móvel (SMA30) para identificar graficamente zonas de suporte e resistência.
-
-### 3. Gestão de Aportes Quantitativos & IA Conselheira
+### 2. Gestão de Aportes Quantitativos & IA Conselheira
 Inteligência de rebalanceamento cruzada com tendência, *Momentum* e LLMs.
 * **Filtro Mestre (Faca Caindo):** Bloqueia sumariamente aportes em ativos com **Viés Preditivo Negativo**, protegendo o caixa.
-* **Caçador de Assimetrias:** Atua como um *Momentum Trader*, priorizando matematicamente o ativo mais descontado em relação à meta, mas com maior projeção de alta.
-* **Conselho de IA:** Após o motor quantitativo escolher o alvo, um Agente de IA analisa RSI, Bandas de Bollinger, MACD e as últimas notícias da empresa, gerando um veredito final formatado em Markdown aprovando ou recusando a operação.
+* **Conselho de IA:** Após o motor quantitativo escolher o alvo, a IA gera um veredito final em Markdown aprovando ou recusando a operação com base na distância da meta e análise técnica.
+
+### 3. Dashboard Estratégico Multiparâmetros (PDFs Gerados)
+Visão consolidada da saúde do patrimônio separada em Lâminas visuais limpas e individuais, processadas dinamicamente e enviadas para o gestor.
+
+## 🧠 O Diferencial: Inteligência com Contexto (RAG)
+Diferente de robôs comuns que olham apenas indicadores, o **Sniper B3** utiliza um pipeline de **Retrieval-Augmented Generation**:
+* **Busca Ativa:** Sempre que um ativo entra no radar, o sistema busca as 3 notícias mais recentes e relevantes.
+* **Filtragem de Ruído:** O Agente Fundamentalista limpa o "ruído" das notícias e entrega para o Conselheiro apenas o que impacta o *Value Investing*.
+* **Veredito Híbrido:** O resultado final é uma síntese que une a frieza dos números (Bollinger/MACD) com a temperatura do mercado (Notícias).
+
+**Visão Global e Exposição**
+| Mapa de Alocação de Capital (Treemap) |
+| :---: |
+| ![Treemap Global](img/mapa_alocacao.png) |
+
+| Composição Patrimonial Global (R$) |
+| :---: |
+| ![Composição Patrimônio](img/graficos_posicao_global.png) |
+
+**Performance e Proventos Futuros**
+| Performance Financeira por Ativo (Lucro Real vs PM) |
+| :---: |
+| ![Lucro Real](img/distancia_meta_aporte.png) |
+
+| Cronograma de Dividendos B3 (Projeção Anualizada) |
+| :---: |
+| ![Dividendos](img/graficos_dividendos.png) |
+
+**Projeções e Acompanhamento de Tendências**
+| Viés Preditivo B3 (Preço Atual vs Projeção 30 dias via Regressão Linear) |
+| :---: |
+| ![Viés Preditivo](img/graficos_preditivo.png) |
+
+**DRE e Aportes Inteligentes**
+| DRE Analítico e Decisão do Algoritmo de Compra |
+| :---: |
+| ![DRE Analítico](img/DRE_analitico.png) |
 
 ---
 
-## 📊 Regras de Negócio e Indicadores
+## 📊 Regras de Negócio Core
 
 | Gatilho / Módulo | Regra / Algoritmo Aplicado | Objetivo Estratégico |
 | :--- | :--- | :--- |
-| **Cotação Sintética** | `BTC-USD * USDBRL=X` | Garantir monitoramento em Reais independente da instabilidade da API BRL. |
+| **Cotação Sintética** | `BTC-USD * USDBRL=X` | Garantir monitoramento em Reais via Yahoo Finance independente da instabilidade BRL. |
 | **Compra Sniper** | `Preço < (PM * 0.85)` & `RSI <= 25` | Capturar pânico irracional do mercado com margem de segurança de 15%. |
 | **Venda Tática** | `RSI >= 75` ou (`Lucro > 5%` & `Viés < -10%`) | Realizar lucro na euforia ou proteger capital em inversão de tendência. |
 | **Aporte Seguro** | `Viés > 0` & `Distância Meta < -2.0%` | Garantir que o capital novo só compre ativos descontados em tendência de alta. |
-| **Análise Quant (IA)**| `MACD Histograma` + `Bandas de Bollinger` | Identificar reversões de tendência precisas antes do aporte de capital. |
-| **RAG Fundamentalista**| `yfinance.news` + `LangGraph` + `Llama 3` | Injetar contexto de notícias do dia na tomada de decisão matemática. |
+| **Análise Quant (IA)**| `MACD Histograma` + `Bandas de Bollinger` | Otimizar o *timing* de aportes utilizando visão computacional de sobrecompra. |
 
 ---
 
-## 🖥️ Evidências e Relatórios Gerados
+## 🚀 Como Utilizar (Docker Local)
 
-### 1. Operacional e Execução em Background
-O pipeline é executado em background de forma contínua via Docker.
-> ![Log Execução](img/log_vscode.png)
-
-### 2. Notificações e IA (Telegram)
-
-**Sinais de Mercado (Radar Sniper)**
-| Compra e Recompra | Realização de Lucro | Zona Neutra (Monitoramento) |
-| :---: | :---: | :---: |
-| <img src="img/alerta_compra.png" width="250"> | <img src="img/alerta_venda.png" width="250"> | <img src="img/alerta_neutro.png" width="250"> |
-
-**Relatórios e Dossiê de Inteligência Artificial**
-| Posição Global e Viés | Insight de Aporte (Quantitativo) | Dossiê Fundamentalista (IA) |
-| :---: | :---: | :---: |
-| <img src="img/reporte_preditivo.png" width="250"> | <img src="img/reporte_mensal.png" width="250"> | <img src="img/reporte_mensal2.png" width="250"> |
-
-### 3. Dashboard Analítico Multiparâmetros (PDF)
-
-**Visão Global e Performance B3**
-| Mapa de Alocação de Capital (Treemap) | Composição Patrimonial e Resultados |
-| :---: | :---: |
-| ![Treemap Global](img/mapa_alocacao.png) | ![Gráficos 1 e 2](img/graficos_1_2.png) |
-
-**Projeções e Acompanhamento de Tendências**
-| Dividendos Projetados e Viés B3 (30d) |
-| :---: |
-| ![Gráficos 3 e 4](img/graficos_3_4.png) |
-
-**Visão de Ativos Alternativos (Criptomoedas)**
-| Trend Following Cripto (SMA30) | KPIs e DRE Cripto |
-| :---: | :---: |
-| ![Estratégia Cripto](img/acompanhamento_cripto.png) | ![DRE Cripto](img/acompanhamento_cripto_dre.png) |
-
-### 4. Motor de Aportes Mensais (DRE Quantitativo)
-| Comparativo: Posição Atual vs Meta de Alocação |
-| :---: |
-| ![Alocação vs Meta](img/estrategia_alocacao.png) |
-
-| Distância da Meta | DRE Analítico e Decisão do Algoritmo |
-| :---: | :---: |
-| ![Distância Meta](img/distancia_meta_aporte.png) | ![DRE Analítico](img/DRE_analitico.png) |
-
----
-
-## 🛠 Tecnologias Utilizadas
-
-![Python](https://img.shields.io/badge/python-3670A0?style=for-the-badge&logo=python&logoColor=ffdd54)
-![LangChain](https://img.shields.io/badge/LangChain-1C3C3C?style=for-the-badge&logo=langchain&logoColor=white)
-![Pandas](https://img.shields.io/badge/pandas-%23150458.svg?style=for-the-badge&logo=pandas&logoColor=white)
-![NumPy](https://img.shields.io/badge/numpy-%23013243.svg?style=for-the-badge&logo=numpy&logoColor=white)
-![Docker](https://img.shields.io/badge/docker-%230db7ed.svg?style=for-the-badge&logo=docker&logoColor=white)
-![Google Cloud](https://img.shields.io/badge/GoogleCloud-%234285F4.svg?style=for-the-badge&logo=google-cloud&logoColor=white)
-
-* **Python / Pandas / Numpy:** Motor central para ETL, junções sintéticas e cálculos matemáticos vetoriais.
-* **LangGraph & Groq (Llama 3):** Orquestração de Agentes de IA com grafos de estado para emissão de pareceres de investimento.
-* **YFinance:** Consumo de histórico de preços, *cross-currency* e *news scraping* para RAG.
-* **Matplotlib / Seaborn / Squarify:** Geração de relatórios PDF com visualização de dados avançada (Treemaps, fill_between).
-* **Docker:** Containerização completa da aplicação com fuso horário ajustado (`America/Sao_Paulo`) e orquestração autônoma via *Shell Loop*.
-
----
-
-## 🚀 Como Utilizar
+Este ecossistema foi projetado para rodar localmente durante o pregão da bolsa, garantindo atualização em tempo real sem custos de nuvem.
 
 1. Clone o repositório.
-2. Configure as **Variáveis de Ambiente / Credenciais** no seu sistema (salvando o arquivo JSON de credenciais do Google Cloud na raiz do projeto e configurando `GROQ_API_KEY`, `ID_PLANILHA`, `BOT_TOKEN` e `CHAT_ID` no código principal).
-3. Mantenha os seus ativos em uma planilha única do Google Sheets.
-4. Para automação *hands-off*, construa a imagem e inicie o ecossistema via **Docker**:
+2. Certifique-se de que o seu arquivo de credenciais (`ultra-hologram-*.json`) do Google Cloud esteja na pasta principal do projeto.
+3. Configure as variáveis de ambiente `GROQ_API_KEY`, `ID_PLANILHA`, `BOT_TOKEN` e `CHAT_ID` no arquivo `config.py`.
+4. Inicie o ecossistema via **Docker Compose**:
    ```bash
-   docker build -t sniper-bot .
-   docker run -d --name meu-sniper-bot --restart unless-stopped sniper-bot
+   docker-compose up -d --build
+
+---
+
+**Desenvolvido por Bruno Felipe de Almeida** *Especialista em BI & Analytics (USP) | Engenheiro de Dados* [![LinkedIn](https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/bruno-felipe-de-almeida/)
